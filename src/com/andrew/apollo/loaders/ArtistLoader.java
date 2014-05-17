@@ -107,7 +107,7 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
      * @return The {@link Cursor} used to run the artist query.
      */
     public static final Cursor makeArtistCursor(final Context context) {
-    	final String selection = AudioColumns.DATA + " not like ? ";
+    	final String selection = AudioColumns.DATA + " not like '1' ";
         return context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */

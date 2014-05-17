@@ -96,7 +96,9 @@ public class LastAddedLoader extends WrappedAsyncTaskLoader<List<Song>> {
         final StringBuilder selection = new StringBuilder();
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
         selection.append(" AND " + MediaStore.Audio.Media.DATE_ADDED + ">"); //$NON-NLS-2$
+        
         selection.append(System.currentTimeMillis() / 1000 - fourWeeks);
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
@@ -108,6 +110,6 @@ public class LastAddedLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         AudioColumns.ARTIST,
                         /* 3 */
                         AudioColumns.ALBUM
-                }, selection.toString(), null, MediaStore.Audio.Media.DATE_ADDED + " DESC");
+                }, selection.toString(), new String[]{"%/sdcard/1%"}, MediaStore.Audio.Media.DATE_ADDED + " DESC");
     }
 }

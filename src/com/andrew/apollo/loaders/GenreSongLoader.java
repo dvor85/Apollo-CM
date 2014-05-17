@@ -14,6 +14,7 @@ package com.andrew.apollo.loaders;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
@@ -101,6 +102,7 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         // Match the songs up with the genre
         final StringBuilder selection = new StringBuilder();
         selection.append(MediaStore.Audio.Genres.Members.IS_MUSIC + "=1");
+        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
         selection.append(" AND " + MediaStore.Audio.Genres.Members.TITLE + "!=''"); //$NON-NLS-2$
         return context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri("external", genreId), new String[] {
@@ -112,6 +114,6 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         MediaStore.Audio.Genres.Members.ALBUM,
                         /* 3 */
                         MediaStore.Audio.Genres.Members.ARTIST
-                }, selection.toString(), null, MediaStore.Audio.Genres.Members.DEFAULT_SORT_ORDER);
+                }, selection.toString(), new String[]{"%/sdcard/1%"}, MediaStore.Audio.Genres.Members.DEFAULT_SORT_ORDER);
     }
 }

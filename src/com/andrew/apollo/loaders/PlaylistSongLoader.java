@@ -105,9 +105,10 @@ public class PlaylistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
      * @return The {@link Cursor} used to run the song query.
      */
     public static final Cursor makePlaylistSongCursor(final Context context, final Long playlistID) {
-        final StringBuilder mSelection = new StringBuilder();
-        mSelection.append(AudioColumns.IS_MUSIC + "=1");
-        mSelection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+        final StringBuilder selection = new StringBuilder();
+        selection.append(AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
         return context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID),
                 new String[] {
@@ -121,7 +122,7 @@ public class PlaylistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         AudioColumns.ARTIST,
                         /* 4 */
                         AudioColumns.ALBUM
-                }, mSelection.toString(), null,
+                }, selection.toString(), new String[]{"%/sdcard/1%"},
                 MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
     }
 }
