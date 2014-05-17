@@ -11,6 +11,8 @@
 
 package com.andrew.apollo.ui.fragments;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,9 +40,8 @@ import com.andrew.apollo.R;
 import com.andrew.apollo.recycler.RecycleHolder;
 import com.andrew.apollo.ui.MusicHolder;
 import com.andrew.apollo.utils.ThemeUtils;
-import com.devspark.appmsg.Crouton;
+import com.devspark.appmsg.AppMsg;
 
-import java.util.List;
 
 /**
  * Used to show all of the available themes on a user's device.
@@ -193,8 +194,8 @@ public class ThemeFragment extends SherlockFragment implements OnItemClickListen
     public void onItemClick(final AdapterView<?> parent, final View view, final int position,
             final long id) {
         mTheme.setThemePackageName(mValues[position]);
-        Crouton.makeText(getSherlockActivity(),
-                mEntries[position] + " " + getString(R.string.theme_set), Crouton.STYLE_CONFIRM)
+        AppMsg.makeText(getSherlockActivity(),
+                mEntries[position] + " " + getString(R.string.theme_set), AppMsg.STYLE_CONFIRM)
                 .show();
     }
 

@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.ArtistColumns;
+import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.R;
 import com.andrew.apollo.model.Artist;
@@ -106,6 +107,7 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
      * @return The {@link Cursor} used to run the artist query.
      */
     public static final Cursor makeArtistCursor(final Context context) {
+    	final String selection = AudioColumns.DATA + " not like ? ";
         return context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */
@@ -116,6 +118,6 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
                         ArtistColumns.NUMBER_OF_ALBUMS,
                         /* 3 */
                         ArtistColumns.NUMBER_OF_TRACKS
-                }, null, null, PreferenceUtils.getInstace(context).getArtistSortOrder());
+                }, null,  null, PreferenceUtils.getInstace(context).getArtistSortOrder());
     }
 }

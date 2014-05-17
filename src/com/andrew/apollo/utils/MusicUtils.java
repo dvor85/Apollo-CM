@@ -555,9 +555,10 @@ public final class MusicUtils {
         final StringBuilder selection = new StringBuilder();
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + MediaColumns.TITLE + "!=''");
+        
         final Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", Long.valueOf(id));
         Cursor cursor = context.getContentResolver().query(uri, projection, selection.toString(),
-                null, null);
+        		null, null);
         if (cursor != null) {
             final long[] mList = getSongListForCursor(cursor);
             cursor.close();
