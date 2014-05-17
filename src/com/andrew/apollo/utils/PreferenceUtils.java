@@ -11,6 +11,8 @@
 
 package com.andrew.apollo.utils;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -80,6 +82,8 @@ public final class PreferenceUtils {
 
     // Key used to set the overall theme color
     public static final String DEFAULT_THEME_COLOR = "default_theme_color";
+    
+    public static final String EXCLUDE_MASK_STRING = "exclude_mask_string";
 
     private static PreferenceUtils sInstance;
 
@@ -365,7 +369,7 @@ public final class PreferenceUtils {
      *         {@link AlbumSongFragment}
      */
     public final String getAlbumSongSortOrder() {
-        return mPreferences.getString(ALBUM_SONG_SORT_ORDER,
+    	return mPreferences.getString(ALBUM_SONG_SORT_ORDER,
                 SortOrder.AlbumSongSortOrder.SONG_TRACK_LIST);
     }
 
@@ -383,6 +387,17 @@ public final class PreferenceUtils {
      */
     public final String getSongSortOrder() {
         return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
+    }
+    
+    public final String[] getExcludeFolders() {
+    	final ArrayList<String> stringList = new ArrayList<String>();
+    	final String pref_str = mPreferences.getString(EXCLUDE_MASK_STRING, "");
+    	if (pref_str.length()>0) {
+    		for (String string : pref_str.split(";")) {
+    			stringList.add("%"+string+"%");
+    		}    	
+    	}
+    	return stringList.toArray(new String[stringList.size()]);
     }
 
     /**
@@ -463,5 +478,7 @@ public final class PreferenceUtils {
         final String defaultValue = "simple";
         return mPreferences.getString(which, defaultValue).equals(grid);
     }
+    
+    
 
 }

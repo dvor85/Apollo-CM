@@ -16,10 +16,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
 import android.text.TextUtils;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
+import com.andrew.apollo.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,13 +116,18 @@ public class SearchLoader extends WrappedAsyncTaskLoader<List<Song>> {
      * @return The {@link Cursor} used to perform the search.
      */
     public static final Cursor makeSearchCursor(final Context context, final String query) {
+    	final StringBuilder selection = new StringBuilder();    	
+    	for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(AudioColumns.DATA + " NOT LIKE " + "'" + str + "'" + " AND ");
+		}; 
+		selection.append(AudioColumns.TITLE + " != ''");
         return context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/search/fancy/" + Uri.encode(query)),
                 new String[] {
                         BaseColumns._ID, MediaStore.Audio.Media.MIME_TYPE,
                         MediaStore.Audio.Artists.ARTIST, MediaStore.Audio.Albums.ALBUM,
                         MediaStore.Audio.Media.TITLE, "data1", "data2" //$NON-NLS-2$ 
-                }, null, null, null);
+                }, selection.toString(), null, null);
     }
 
 }

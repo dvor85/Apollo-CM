@@ -18,6 +18,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
+import com.andrew.apollo.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,9 +101,11 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
      */
     public static final Cursor makeGenreSongCursor(final Context context, final Long genreId) {
         // Match the songs up with the genre
-        final StringBuilder selection = new StringBuilder();
+        final StringBuilder selection = new StringBuilder();        
         selection.append(MediaStore.Audio.Genres.Members.IS_MUSIC + "=1");
-        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		};
         selection.append(" AND " + MediaStore.Audio.Genres.Members.TITLE + "!=''"); //$NON-NLS-2$
         return context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri("external", genreId), new String[] {
@@ -114,6 +117,6 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         MediaStore.Audio.Genres.Members.ALBUM,
                         /* 3 */
                         MediaStore.Audio.Genres.Members.ARTIST
-                }, selection.toString(), new String[]{"%/sdcard/1%"}, MediaStore.Audio.Genres.Members.DEFAULT_SORT_ORDER);
+                }, selection.toString(), null, MediaStore.Audio.Genres.Members.DEFAULT_SORT_ORDER);
     }
 }

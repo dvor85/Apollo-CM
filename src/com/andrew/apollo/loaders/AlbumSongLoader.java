@@ -110,10 +110,12 @@ public class AlbumSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
      */
     public static final Cursor makeAlbumSongCursor(final Context context, final Long albumId) {
         // Match the songs up with the artist
-        final StringBuilder selection = new StringBuilder();
+        final StringBuilder selection = new StringBuilder();        
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''");
-        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		};        
         selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + albumId);
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
@@ -127,7 +129,7 @@ public class AlbumSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         AudioColumns.ALBUM,
                         /* 4 */
                         AudioColumns.DURATION
-                }, selection.toString(), new String[]{"%/sdcard/1%"},
+                }, selection.toString(), null,
                 PreferenceUtils.getInstace(context).getAlbumSongSortOrder());
     }
 

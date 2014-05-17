@@ -107,17 +107,39 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
      * @return The {@link Cursor} used to run the artist query.
      */
     public static final Cursor makeArtistCursor(final Context context) {
-    	final String selection = AudioColumns.DATA + " not like '1' ";
-        return context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+    	final StringBuilder selection = new StringBuilder();        
+        selection.append(AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + AudioColumns.TITLE + " != ''");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		};
+        
+        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */
                         BaseColumns._ID,
                         /* 1 */
-                        ArtistColumns.ARTIST,
+                        AudioColumns.ARTIST,
                         /* 2 */
-                        ArtistColumns.NUMBER_OF_ALBUMS,
+                        "COUNT("+ BaseColumns._ID +")",
                         /* 3 */
-                        ArtistColumns.NUMBER_OF_TRACKS
-                }, null,  null, PreferenceUtils.getInstace(context).getArtistSortOrder());
+                        "COUNT("+ BaseColumns._ID +")"
+                }, selection.toString(), null,
+                //"GROUP BY " + AudioColumns.ALBUM_ID + " " +
+                PreferenceUtils.getInstace(context).getArtistSongSortOrder());
+    
+    
+    /*	final String selection = AudioColumns.DATA + " not like '1' ";
+        return context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+                new String[] {
+                        /* 0 */
+    /*                    BaseColumns._ID,
+                        /* 1 */
+    /*                    ArtistColumns.ARTIST,
+                        /* 2 */
+    /*                    ArtistColumns.NUMBER_OF_ALBUMS,
+                        /* 3 */
+    /*                    ArtistColumns.NUMBER_OF_TRACKS
+                }, null,  null, PreferenceUtils.getInstace(context).getArtistSortOrder());*/
     }
 }

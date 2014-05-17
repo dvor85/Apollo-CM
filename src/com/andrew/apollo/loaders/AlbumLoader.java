@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AlbumColumns;
+import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.R;
 import com.andrew.apollo.model.Album;
@@ -104,18 +105,28 @@ public class AlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
      * @return The {@link Cursor} used to run the album query.
      */
     public static final Cursor makeAlbumCursor(final Context context) {
-        return context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+    	final StringBuilder selection = new StringBuilder();
+        selection.append(AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + AudioColumns.TITLE + " != ''");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		};        
+        
+        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */
                         BaseColumns._ID,
                         /* 1 */
-                        AlbumColumns.ALBUM,
+                        AudioColumns.ALBUM,
                         /* 2 */
-                        AlbumColumns.ARTIST,
+                        AudioColumns.ARTIST,
                         /* 3 */
-                        AlbumColumns.NUMBER_OF_SONGS,
+                        "COUNT("+ BaseColumns._ID +")",
                         /* 4 */
-                        AlbumColumns.FIRST_YEAR
-                }, null, null, PreferenceUtils.getInstace(context).getAlbumSortOrder());
+                        AudioColumns.YEAR
+                }, selection.toString(), null,
+                PreferenceUtils.getInstace(context).getAlbumSortOrder());
+    	
+
     }
 }

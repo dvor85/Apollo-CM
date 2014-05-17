@@ -18,6 +18,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
+import com.andrew.apollo.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,9 @@ public class PlaylistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         final StringBuilder selection = new StringBuilder();
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
-        selection.append(" AND " + AudioColumns.DATA + " NOT LIKE ? ");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}; 
         return context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID),
                 new String[] {
@@ -122,7 +125,7 @@ public class PlaylistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
                         AudioColumns.ARTIST,
                         /* 4 */
                         AudioColumns.ALBUM
-                }, selection.toString(), new String[]{"%/sdcard/1%"},
+                }, selection.toString(), null,
                 MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
     }
 }

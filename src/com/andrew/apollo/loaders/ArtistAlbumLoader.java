@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AlbumColumns;
+import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.R;
 import com.andrew.apollo.model.Album;
@@ -109,18 +110,41 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
      * @param artistId The Id of the artist the albums belong to.
      */
     public static final Cursor makeArtistAlbumCursor(final Context context, final Long artistId) {
-        return context.getContentResolver().query(
-                MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[] {
+    	
+    	final StringBuilder selection = new StringBuilder();
+        selection.append(AudioColumns.IS_MUSIC + "=1");
+        selection.append(" AND " + AudioColumns.TITLE + " != ''");
+        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		};        
+        selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + artistId);
+        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[] {
                         /* 0 */
                         BaseColumns._ID,
                         /* 1 */
-                        AlbumColumns.ALBUM,
+                        AudioColumns.ALBUM,
                         /* 2 */
-                        AlbumColumns.ARTIST,
+                        AudioColumns.ARTIST,
                         /* 3 */
-                        AlbumColumns.NUMBER_OF_SONGS,
+                        "COUNT("+ BaseColumns._ID +")",
                         /* 4 */
-                        AlbumColumns.FIRST_YEAR
-                }, null, null, PreferenceUtils.getInstace(context).getArtistAlbumSortOrder());
+                        AudioColumns.YEAR
+                }, selection.toString(), null,
+                PreferenceUtils.getInstace(context).getArtistAlbumSortOrder());
+    	
+    	/*return context.getContentResolver().query(
+                MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[] {
+                        /* 0 */
+          /*              BaseColumns._ID,
+                        /* 1 */
+          /*              AlbumColumns.ALBUM,
+                        /* 2 */
+          /*              AlbumColumns.ARTIST,
+                        /* 3 */
+          /*              AlbumColumns.NUMBER_OF_SONGS,
+                        /* 4 */
+          /*              AlbumColumns.FIRST_YEAR
+                }, null, null, PreferenceUtils.getInstace(context).getArtistAlbumSortOrder());*/
     }
 }
