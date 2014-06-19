@@ -816,7 +816,7 @@ public class AudioPlayerActivity extends SherlockFragmentActivity implements Ser
 
         @Override
         public void onClick(final View v) {
-            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(),
+            NavUtils.openAlbumProfile(AudioPlayerActivity.this, MusicUtils.getAlbumName(), MusicUtils.getCurrentAlbumId(),
                     MusicUtils.getArtistName());
         }
     };

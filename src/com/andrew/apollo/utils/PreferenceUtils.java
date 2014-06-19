@@ -83,7 +83,7 @@ public final class PreferenceUtils {
     // Key used to set the overall theme color
     public static final String DEFAULT_THEME_COLOR = "default_theme_color";
     
-    public static final String EXCLUDE_MASK_STRING = "exclude_mask_string";
+    public static final String EXCLUDE_MASK_STRING = "exclude_mask_strings";
 
     private static PreferenceUtils sInstance;
 
@@ -398,6 +398,24 @@ public final class PreferenceUtils {
     		}    	
     	}
     	return stringList.toArray(new String[stringList.size()]);
+    }
+    
+    public void setExcludeFolders(final String[] strings) {
+        ApolloUtils.execute(false, new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... unused) {
+            	String value="";
+            	for(String s : strings)
+            		if (!value.isEmpty()) {
+            			value += ";" + s ;      
+            		}
+                final SharedPreferences.Editor editor = mPreferences.edit();
+                editor.putString(EXCLUDE_MASK_STRING, value);
+                SharedPreferencesCompat.apply(editor);
+
+                return null;
+            }
+        }, (Void[])null);
     }
 
     /**

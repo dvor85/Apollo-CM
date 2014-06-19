@@ -374,6 +374,7 @@ public class SearchActivity extends SherlockFragmentActivity implements LoaderCa
             // If it's an album, open the album profile
             NavUtils.openAlbumProfile(this,
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST)));
         } else if (position >= 0 && id >= 0) {
             // If it's a song, play it and leave

@@ -371,7 +371,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity implements S
         @Override
         public void onClick(final View v) {
             if (MusicUtils.getCurrentAudioId() != -1) {
-                NavUtils.openAlbumProfile(BaseActivity.this, MusicUtils.getAlbumName(),
+                NavUtils.openAlbumProfile(BaseActivity.this, MusicUtils.getAlbumName(), MusicUtils.getCurrentAlbumId(),
                         MusicUtils.getArtistName());
             } else {
                 MusicUtils.shuffleAll(BaseActivity.this);

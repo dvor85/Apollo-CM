@@ -27,7 +27,7 @@ import com.andrew.apollo.ui.activities.HomeActivity;
 import com.andrew.apollo.ui.activities.ProfileActivity;
 import com.andrew.apollo.ui.activities.SearchActivity;
 import com.andrew.apollo.ui.activities.SettingsActivity;
-import com.devspark.appmsg.Crouton;
+import com.devspark.appmsg.AppMsg;
 
 /**
  * Various navigation helpers.
@@ -65,14 +65,14 @@ public final class NavUtils {
      * @param artistName The name of the album artist
      */
     public static void openAlbumProfile(final SherlockFragmentActivity context,
-            final String albumName, final String artistName) {
+            final String albumName, final Long albumId, final String artistName) {
 
         // Create a new bundle to transfer the album info
         final Bundle bundle = new Bundle();
         bundle.putString(Config.ALBUM_YEAR, MusicUtils.getReleaseDateForAlbum(context, albumName));
         bundle.putString(Config.ARTIST_NAME, artistName);
         bundle.putString(Config.MIME_TYPE, MediaStore.Audio.Albums.CONTENT_TYPE);
-        bundle.putLong(Config.ID, MusicUtils.getIdForAlbum(context, albumName));
+        bundle.putLong(Config.ID, albumId);
         bundle.putString(Config.NAME, albumName);
 
         // Create the intent to launch the profile activity
@@ -94,8 +94,8 @@ public final class NavUtils {
             // Make sure the notification starts
             MusicUtils.startBackgroundService(context);
         } catch (final ActivityNotFoundException e) {
-            Crouton.makeText(context, context.getString(R.string.no_effects_for_you),
-                    Crouton.STYLE_ALERT);
+            AppMsg.makeText(context, context.getString(R.string.no_effects_for_you),
+                    AppMsg.STYLE_ALERT);
         }
     }
 

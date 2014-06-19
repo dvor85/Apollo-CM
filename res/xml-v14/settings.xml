@@ -12,7 +12,7 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.
+  limitations under the License.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
@@ -53,6 +53,11 @@
             android:defaultValue="true"
             android:key="artist_images"
             android:title="@string/settings_download_artist_images_title" />
+
+        <EditTextPreference
+            android:dialogTitle="@string/exclude_mask_strings_title"
+            android:key="exclude_mask_strings"
+            android:title="@string/exclude_mask_strings_title" />
     </PreferenceCategory>
     <!-- Storage catetory -->
     <PreferenceCategory android:title="@string/settings_storage_category" >

@@ -257,7 +257,7 @@ public class ArtistAlbumFragment extends SherlockFragment implements LoaderCallb
             return;
         }
         mAlbum = mAdapter.getItem(position - 1);
-        NavUtils.openAlbumProfile(getSherlockActivity(), mAlbum.mAlbumName, mAlbum.mArtistName);
+        NavUtils.openAlbumProfile(getSherlockActivity(), mAlbum.mAlbumName, Long.parseLong(mAlbum.mAlbumId), mAlbum.mArtistName);
         getSherlockActivity().finish();
     }
 
