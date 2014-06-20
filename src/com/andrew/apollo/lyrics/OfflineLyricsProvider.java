@@ -64,8 +64,10 @@ public class OfflineLyricsProvider implements LyricsProvider {
         } catch (final InvalidAudioFrameException e) {
             e.printStackTrace();
         } catch (final UnsupportedOperationException e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace();        
+    	} catch (final NullPointerException e) {
+    		e.printStackTrace();
+    	}
         return lyrics;
     }
 

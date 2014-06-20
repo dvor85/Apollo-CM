@@ -43,7 +43,7 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 	/**
 	 * The {@link Cursor} used to run the query.
 	 */
-	private Cursor mCursor, fCursor;
+	private Cursor mCursor;
 
 	/**
 	 * Constructor of <code>ArtistLoader</code>
@@ -68,9 +68,7 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 				// Copy the artist id
 				final String id = mCursor.getString(0);
 
-				fCursor = makeArtistSongCursor(getContext(), Long.parseLong(id));
-				if (fCursor != null && fCursor.moveToFirst()) {
-					fCursor.close();
+				if (MusicUtils.getSongListForArtist(getContext(), id).length > 0) {
 
 					// Copy the artist name
 					final String artistName = mCursor.getString(1);
@@ -96,7 +94,6 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 					// Add everything up
 					mArtistsList.add(artist);
 				}
-				fCursor = null;
 			} while (mCursor.moveToNext());
 		}
 		// Close the cursor
@@ -115,14 +112,6 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 	 * @return The {@link Cursor} used to run the artist query.
 	 */
 	public static final Cursor makeArtistCursor(final Context context) {
-		final StringBuilder selection = new StringBuilder();
-		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
-		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		}
-		;
-
 		return context.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
 				new String[] {
 				/* 0 */
@@ -134,28 +123,5 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 				/* 3 */
 				ArtistColumns.NUMBER_OF_TRACKS }, null, null,
 				PreferenceUtils.getInstace(context).getArtistSortOrder());
-	}
-
-	/**
-	 * @param context
-	 *            The {@link Context} to use.
-	 * @param artistId
-	 *            The Id of the artist the songs belong to.
-	 * @return The {@link Cursor} used to run the query.
-	 */
-	public static final Cursor makeArtistSongCursor(final Context context, final Long artistId) {
-		// Match the songs up with the artist
-		final StringBuilder selection = new StringBuilder();
-		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
-		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		}
-		;
-		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + artistId);
-		return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] {
-				/* 0 */
-				BaseColumns._ID }, selection.toString(), null, null);
 	}
 }

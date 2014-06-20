@@ -65,14 +65,14 @@ public final class NavUtils {
      * @param artistName The name of the album artist
      */
     public static void openAlbumProfile(final SherlockFragmentActivity context,
-            final String albumName, final Long albumId, final String artistName) {
+            final String albumName, final String artistName) {
 
         // Create a new bundle to transfer the album info
         final Bundle bundle = new Bundle();
         bundle.putString(Config.ALBUM_YEAR, MusicUtils.getReleaseDateForAlbum(context, albumName));
         bundle.putString(Config.ARTIST_NAME, artistName);
         bundle.putString(Config.MIME_TYPE, MediaStore.Audio.Albums.CONTENT_TYPE);
-        bundle.putLong(Config.ID, albumId);
+        bundle.putLong(Config.ID, MusicUtils.getIdForAlbum(context, albumName));
         bundle.putString(Config.NAME, albumName);
 
         // Create the intent to launch the profile activity

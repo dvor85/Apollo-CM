@@ -43,7 +43,7 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 	/**
 	 * The {@link Cursor} used to run the query.
 	 */
-	private Cursor mCursor, fCursor;
+	private Cursor mCursor;
 
 	/**
 	 * The Id of the artist the albums belong to.
@@ -76,9 +76,7 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 				// Copy the album id
 				final String id = mCursor.getString(0);
 
-				fCursor = makeAlbumSongCursor(getContext(), Long.parseLong(id));
-				if (fCursor != null && fCursor.moveToFirst()) {
-					fCursor.close();
+				if (MusicUtils.getSongListForAlbum(getContext(), id).length > 0) {
 
 					// Copy the album name
 					final String albumName = mCursor.getString(1);
@@ -102,7 +100,6 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 					// Add everything up
 					mAlbumsList.add(album);
 				}
-				fCursor = null;
 			} while (mCursor.moveToNext());
 		}
 		// Close the cursor
@@ -124,7 +121,7 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 		final StringBuilder selection = new StringBuilder();
 
 		selection.append(AudioColumns.ARTIST_ID + "=" + artistId);
-		
+
 		return context.getContentResolver().query(
 				MediaStore.Audio.Artists.Albums.getContentUri("external", artistId), new String[] {
 				/* 0 */
@@ -138,29 +135,6 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 				/* 4 */
 				AlbumColumns.FIRST_YEAR }, selection.toString(), null,
 				PreferenceUtils.getInstace(context).getArtistAlbumSortOrder());
-	}
-
-	/**
-	 * @param context
-	 *            The {@link Context} to use.
-	 * @param artistId
-	 *            The Id of the artist the songs belong to.
-	 * @return The {@link Cursor} used to run the query.
-	 */
-	public static final Cursor makeAlbumSongCursor(final Context context, final Long albumId) {
-		// Match the songs up with the artist
-		final StringBuilder selection = new StringBuilder();
-		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
-		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		}
-		;
-		selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + albumId);
-		return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] {
-				/* 0 */
-				BaseColumns._ID }, selection.toString(), null, null);
 	}
 
 }
