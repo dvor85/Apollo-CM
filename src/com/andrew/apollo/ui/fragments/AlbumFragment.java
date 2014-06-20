@@ -276,7 +276,7 @@ public class AlbumFragment extends SherlockFragment implements LoaderCallbacks<L
     public void onItemClick(final AdapterView<?> parent, final View view, final int position,
             final long id) {
         mAlbum = mAdapter.getItem(position);
-        NavUtils.openAlbumProfile(getSherlockActivity(), mAlbum.mAlbumName, Long.parseLong(mAlbum.mAlbumId), mAlbum.mArtistName);
+        NavUtils.openAlbumProfile(getSherlockActivity(), mAlbum.mAlbumName, mAlbum.mArtistName);
     }
 
     /**

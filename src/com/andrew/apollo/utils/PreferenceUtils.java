@@ -394,7 +394,7 @@ public final class PreferenceUtils {
     	final String pref_str = mPreferences.getString(EXCLUDE_MASK_STRING, "");
     	if (pref_str.length()>0) {
     		for (String string : pref_str.split(";")) {
-    			stringList.add("%"+string+"%");
+    			stringList.add(string.replace("*", "%"));
     		}    	
     	}
     	return stringList.toArray(new String[stringList.size()]);
@@ -407,7 +407,7 @@ public final class PreferenceUtils {
             	String value="";
             	for(String s : strings)
             		if (!value.isEmpty()) {
-            			value += ";" + s ;      
+            			value += ";" + s.replace("%", "*");      
             		}
                 final SharedPreferences.Editor editor = mPreferences.edit();
                 editor.putString(EXCLUDE_MASK_STRING, value);
