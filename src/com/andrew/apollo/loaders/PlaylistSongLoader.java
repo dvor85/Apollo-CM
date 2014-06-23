@@ -109,9 +109,10 @@ public class PlaylistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         final StringBuilder selection = new StringBuilder();
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+        //Exclude files mask
         for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
         	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		}; 
+		}
         return context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID),
                 new String[] {

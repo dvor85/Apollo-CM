@@ -113,10 +113,12 @@ public class AlbumSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         final StringBuilder selection = new StringBuilder();        
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''");
+        selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + albumId);
+        //Exclude files mask
         for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
         	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		};        
-        selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + albumId);
+		}        
+        
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */

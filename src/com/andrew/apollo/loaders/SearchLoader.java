@@ -116,11 +116,13 @@ public class SearchLoader extends WrappedAsyncTaskLoader<List<Song>> {
      * @return The {@link Cursor} used to perform the search.
      */
     public static final Cursor makeSearchCursor(final Context context, final String query) {
-    	final StringBuilder selection = new StringBuilder();    	
+    	final StringBuilder selection = new StringBuilder();
+    	selection.append(AudioColumns.TITLE + " != ''");
+    	//Exclude files mask
     	for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
-        	selection.append(AudioColumns.DATA + " NOT LIKE " + "'" + str + "'" + " AND ");
-		}; 
-		selection.append(AudioColumns.TITLE + " != ''");
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		} 
+		
         return context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/search/fancy/" + Uri.encode(query)),
                 new String[] {

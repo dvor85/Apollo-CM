@@ -97,12 +97,13 @@ public class LastAddedLoader extends WrappedAsyncTaskLoader<List<Song>> {
         final StringBuilder selection = new StringBuilder();        
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+        selection.append(" AND " + MediaStore.Audio.Media.DATE_ADDED + ">"); //$NON-NLS-2$        
+        selection.append(System.currentTimeMillis() / 1000 - fourWeeks);
+        //Exclude files mask
         for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
         	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		};
-        selection.append(" AND " + MediaStore.Audio.Media.DATE_ADDED + ">"); //$NON-NLS-2$
+		}
         
-        selection.append(System.currentTimeMillis() / 1000 - fourWeeks);
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */

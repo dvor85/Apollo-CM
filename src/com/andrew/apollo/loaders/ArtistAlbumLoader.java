@@ -75,7 +75,8 @@ public class ArtistAlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 			do {
 				// Copy the album id
 				final String id = mCursor.getString(0);
-
+				
+				//add to albumList if album have songs
 				if (MusicUtils.getSongListForAlbum(getContext(), id).length > 0) {
 
 					// Copy the album name

@@ -106,6 +106,7 @@ public class ArtistSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''");
         selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + artistId);
+        //Exclude files mask
         for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
         	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}

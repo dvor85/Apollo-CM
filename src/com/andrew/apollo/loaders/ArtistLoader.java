@@ -67,7 +67,8 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 			do {
 				// Copy the artist id
 				final String id = mCursor.getString(0);
-
+				
+				//add to artistsList only if artist have songs
 				if (MusicUtils.getSongListForArtist(getContext(), id).length > 0) {
 
 					// Copy the artist name

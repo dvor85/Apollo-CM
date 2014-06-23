@@ -64,7 +64,8 @@ public class GenreLoader extends WrappedAsyncTaskLoader<List<Genre>> {
 			do {
 				// Copy the genre id
 				final String id = mCursor.getString(0);
-
+				
+				//add to GenreList if genre have songs
 				if (MusicUtils.getSongListForGenre(getContext(), id).length > 0) {
 
 					// Copy the genre name

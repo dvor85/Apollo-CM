@@ -103,10 +103,12 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
         // Match the songs up with the genre
         final StringBuilder selection = new StringBuilder();        
         selection.append(MediaStore.Audio.Genres.Members.IS_MUSIC + "=1");
+        selection.append(" AND " + MediaStore.Audio.Genres.Members.TITLE + "!=''"); //$NON-NLS-2$
+        //Exclude files mask
         for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
         	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
-        selection.append(" AND " + MediaStore.Audio.Genres.Members.TITLE + "!=''"); //$NON-NLS-2$
+        
         return context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri("external", genreId), new String[] {
                         /* 0 */

@@ -522,6 +522,7 @@ public final class MusicUtils {
 		selection.append(AudioColumns.IS_MUSIC + "=1");
 		selection.append(" AND " + AudioColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + id);
+		// Exclude files mask
 		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
 			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
@@ -551,6 +552,7 @@ public final class MusicUtils {
 		selection.append(AudioColumns.IS_MUSIC + "=1");
 		selection.append(" AND " + AudioColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + id);
+		// Exclude files mask
 		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
 			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
@@ -577,10 +579,11 @@ public final class MusicUtils {
 		final String[] projection = new String[] { BaseColumns._ID };
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + MediaColumns.TITLE + "!=''");		
-        for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
-        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
-		}        
+		selection.append(" AND " + MediaColumns.TITLE + "!=''");
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
 
 		final Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", Long.valueOf(id));
 		Cursor cursor = context.getContentResolver().query(uri, projection, selection.toString(),
@@ -693,9 +696,13 @@ public final class MusicUtils {
 				PlaylistsColumns.NAME + "=?", new String[] { name }, PlaylistsColumns.NAME);
 		int id = -1;
 		if (cursor != null) {
-			cursor.moveToFirst();
-			if (!cursor.isAfterLast()) {
-				id = cursor.getInt(0);
+			if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForPlaylist(context, Long.toString(id)).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
 			}
 			cursor.close();
 			cursor = null;
@@ -718,14 +725,15 @@ public final class MusicUtils {
 				ArtistColumns.ARTIST + "=?", new String[] { name }, ArtistColumns.ARTIST);
 		int id = -1;
 		if (cursor != null) {
-			cursor.moveToFirst();
-			do {
-				id = cursor.getInt(0);
-				if (getSongListForArtist(context, Long.toString(id)).length>0){
-					break;
-				}
-			} while(cursor.moveToNext());
-			
+			if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForArtist(context, Long.toString(id)).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
+			}
+
 			cursor.close();
 			cursor = null;
 		}
@@ -747,13 +755,14 @@ public final class MusicUtils {
 				AlbumColumns.ALBUM + "=?", new String[] { name }, AlbumColumns.ALBUM);
 		int id = -1;
 		if (cursor != null) {
-			cursor.moveToFirst();
-			do {
-				id = cursor.getInt(0);
-				if (getSongListForAlbum(context, Long.toString(id)).length>0){
-					break;
-				}
-			} while(cursor.moveToNext());
+			if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForAlbum(context, Long.toString(id)).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
+			}
 			cursor.close();
 			cursor = null;
 		}
@@ -775,9 +784,10 @@ public final class MusicUtils {
 				AlbumColumns.ALBUM + "=?", new String[] { name }, AlbumColumns.ALBUM);
 		String artistName = null;
 		if (cursor != null) {
-			cursor.moveToFirst();
-			if (!cursor.isAfterLast()) {
-				artistName = cursor.getString(0);
+			if (cursor.moveToFirst()) {
+				if (!cursor.isAfterLast()) {
+					artistName = cursor.getString(0);
+				}
 			}
 			cursor.close();
 			cursor = null;
@@ -1049,9 +1059,16 @@ public final class MusicUtils {
 	 */
 	public static final long[] getSongListForPlaylist(final Context context, final String playlistId) {
 		final String[] projection = new String[] { MediaStore.Audio.Playlists.Members.AUDIO_ID };
+		final StringBuilder selection = new StringBuilder();
+		selection.append(AudioColumns.IS_MUSIC + "=1");
+		selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstace(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Playlists.Members.getContentUri("external",
-						Long.valueOf(playlistId)), projection, null, null,
+						Long.valueOf(playlistId)), projection, selection.toString(), null,
 				MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
 
 		if (cursor != null) {
