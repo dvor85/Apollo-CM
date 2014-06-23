@@ -505,10 +505,16 @@ public final class MusicUtils {
         final String[] projection = new String[] {
             BaseColumns._ID
         };
-        final String selection = AudioColumns.ARTIST_ID + "=" + id + " AND "
-                + AudioColumns.IS_MUSIC + "=1";
+        final StringBuilder selection = new StringBuilder();
+		selection.append(AudioColumns.IS_MUSIC + "=1");
+		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + id);
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null,
                 AudioColumns.ALBUM_KEY + "," + AudioColumns.TRACK);
         if (cursor != null) {
             final long[] mList = getSongListForCursor(cursor);
@@ -528,10 +534,16 @@ public final class MusicUtils {
         final String[] projection = new String[] {
             BaseColumns._ID
         };
-        final String selection = AudioColumns.ALBUM_ID + "=" + id + " AND " + AudioColumns.IS_MUSIC
-                + "=1";
+        final StringBuilder selection = new StringBuilder();
+		selection.append(AudioColumns.IS_MUSIC + "=1");
+		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + id);
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null,
                 AudioColumns.TRACK + ", " + MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor != null) {
             final long[] mList = getSongListForCursor(cursor);
@@ -566,8 +578,12 @@ public final class MusicUtils {
             BaseColumns._ID
         };
         final StringBuilder selection = new StringBuilder();
-        selection.append(AudioColumns.IS_MUSIC + "=1");
-        selection.append(" AND " + MediaColumns.TITLE + "!=''");
+		selection.append(AudioColumns.IS_MUSIC + "=1");
+		selection.append(" AND " + MediaColumns.TITLE + "!=''");
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         final Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", Long.valueOf(id));
         Cursor cursor = context.getContentResolver().query(uri, projection, selection.toString(),
                 null, null);
@@ -701,10 +717,14 @@ public final class MusicUtils {
                 }, PlaylistsColumns.NAME);
         int id = -1;
         if (cursor != null) {
-            cursor.moveToFirst();
-            if (!cursor.isAfterLast()) {
-                id = cursor.getInt(0);
-            }
+        	if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForPlaylist(context, id).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
+			}
             cursor.close();
             cursor = null;
         }
@@ -727,10 +747,14 @@ public final class MusicUtils {
                 }, ArtistColumns.ARTIST);
         int id = -1;
         if (cursor != null) {
-            cursor.moveToFirst();
-            if (!cursor.isAfterLast()) {
-                id = cursor.getInt(0);
-            }
+        	if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForArtist(context, id).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
+			}
             cursor.close();
             cursor = null;
         }
@@ -755,10 +779,14 @@ public final class MusicUtils {
                 }, AlbumColumns.ALBUM);
         int id = -1;
         if (cursor != null) {
-            cursor.moveToFirst();
-            if (!cursor.isAfterLast()) {
-                id = cursor.getInt(0);
-            }
+        	if (cursor.moveToFirst()) {
+				do {
+					id = cursor.getInt(0);
+					if (getSongListForAlbum(context, id).length > 0) {
+						break;
+					}
+				} while (cursor.moveToNext());
+			}
             cursor.close();
             cursor = null;
         }
@@ -1048,9 +1076,16 @@ public final class MusicUtils {
         final String[] projection = new String[] {
             MediaStore.Audio.Playlists.Members.AUDIO_ID
         };
+        final StringBuilder selection = new StringBuilder();
+		selection.append(AudioColumns.IS_MUSIC + "=1");
+		selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+		// Exclude files mask
+		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Playlists.Members.getContentUri("external",
-                        Long.valueOf(playlistId)), projection, null, null,
+                        Long.valueOf(playlistId)), projection, selection.toString(), null,
                 MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
 
         if (cursor != null) {

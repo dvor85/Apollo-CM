@@ -14,9 +14,11 @@ package com.andrew.apollo.loaders;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
+import com.andrew.apollo.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,9 +101,13 @@ public class GenreSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
      */
     public static final Cursor makeGenreSongCursor(final Context context, final Long genreId) {
         // Match the songs up with the genre
-        final StringBuilder selection = new StringBuilder();
+    	final StringBuilder selection = new StringBuilder();        
         selection.append(MediaStore.Audio.Genres.Members.IS_MUSIC + "=1");
         selection.append(" AND " + MediaStore.Audio.Genres.Members.TITLE + "!=''"); //$NON-NLS-2$
+        //Exclude files mask
+        for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         return context.getContentResolver().query(
                 MediaStore.Audio.Genres.Members.getContentUri("external", genreId), new String[] {
                         /* 0 */

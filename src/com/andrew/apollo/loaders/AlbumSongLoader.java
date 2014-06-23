@@ -108,10 +108,14 @@ public class AlbumSongLoader extends WrappedAsyncTaskLoader<List<Song>> {
      */
     public static final Cursor makeAlbumSongCursor(final Context context, final Long albumId) {
         // Match the songs up with the artist
-        final StringBuilder selection = new StringBuilder();
+    	final StringBuilder selection = new StringBuilder();        
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''");
         selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + albumId);
+        //Exclude files mask
+        for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}        
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */

@@ -11,6 +11,8 @@
 
 package com.andrew.apollo.utils;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -77,6 +79,9 @@ public final class PreferenceUtils {
 
     // Key used to set the overall theme color
     public static final String DEFAULT_THEME_COLOR = "default_theme_color";
+    
+	//Used to get exclude files mask
+	public static final String EXCLUDE_MASK_STRINGS = "exclude_mask_strings";
 
     private static PreferenceUtils sInstance;
 
@@ -101,6 +106,20 @@ public final class PreferenceUtils {
         }
         return sInstance;
     }
+    
+    /**
+	 * @return The Exclude files mask
+	 */
+	public final String[] getExcludeFolders() {
+		final ArrayList<String> stringList = new ArrayList<String>();
+		final String pref_str = mPreferences.getString(EXCLUDE_MASK_STRINGS, "");
+		if (pref_str.length() > 0) {
+			for (String string : pref_str.split(";")) {
+				stringList.add(string.replace("*", "%"));
+			}
+		}
+		return stringList.toArray(new String[stringList.size()]);
+	}
 
     /**
      * Saves the current page the user is on when they close the app.

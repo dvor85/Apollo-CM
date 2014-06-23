@@ -19,6 +19,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 
 import com.andrew.apollo.model.Song;
 import com.andrew.apollo.utils.Lists;
+import com.andrew.apollo.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,11 +94,15 @@ public class LastAddedLoader extends WrappedAsyncTaskLoader<List<Song>> {
      */
     public static final Cursor makeLastAddedCursor(final Context context) {
         final int fourWeeks = 4 * 3600 * 24 * 7;
-        final StringBuilder selection = new StringBuilder();
+        final StringBuilder selection = new StringBuilder();        
         selection.append(AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
-        selection.append(" AND " + MediaStore.Audio.Media.DATE_ADDED + ">"); //$NON-NLS-2$
+        selection.append(" AND " + MediaStore.Audio.Media.DATE_ADDED + ">"); //$NON-NLS-2$        
         selection.append(System.currentTimeMillis() / 1000 - fourWeeks);
+        //Exclude files mask
+        for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
+        	selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+		}
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         /* 0 */
