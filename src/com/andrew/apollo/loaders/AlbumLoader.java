@@ -66,9 +66,12 @@ public class AlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 			do {
 				// Copy the album id
 				final long id = mCursor.getLong(0);
+				
+				// the number of songs
+				final int songCount = MusicUtils.getSongCountForAlbum(getContext(), id);
 
 				// add to albumList if album have songs
-				if (MusicUtils.getSongListForAlbum(getContext(), id).length > 0) {
+				if (songCount > 0) {
 
 					// Copy the album name
 					final String albumName = mCursor.getString(1);
@@ -77,7 +80,7 @@ public class AlbumLoader extends WrappedAsyncTaskLoader<List<Album>> {
 					final String artist = mCursor.getString(2);
 
 					// Copy the number of songs
-					final int songCount = mCursor.getInt(3);
+					//final int songCount = mCursor.getInt(3);
 
 					// Copy the release year
 					final String year = mCursor.getString(4);

@@ -67,17 +67,21 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 				// Copy the artist id
 				final long id = mCursor.getLong(0);
 
+				// the number of songs
+				final int songCount = MusicUtils.getSongCountForArtist(getContext(), id);
+
 				// add to artistsList only if artist have songs
-				if (MusicUtils.getSongListForArtist(getContext(), id).length > 0) {
+				if (songCount > 0) {
 
 					// Copy the artist name
 					final String artistName = mCursor.getString(1);
 
 					// Copy the number of albums
-					final int albumCount = mCursor.getInt(2);
+					//final int albumCount = mCursor.getInt(2);
+					final int albumCount = MusicUtils.getAlbumCountForArtist(getContext(), id);
 
 					// Copy the number of songs
-					final int songCount = mCursor.getInt(3);
+					// final int songCount = mCursor.getInt(3);
 
 					// Create a new artist
 					final Artist artist = new Artist(id, artistName, songCount, albumCount);

@@ -13,7 +13,7 @@
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
-     limitations under the License.
+     limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
@@ -141,7 +141,7 @@
     <string name="settings_download_artist_images_title">Download missing artist images</string>
     <string name="settings_open_source_licenses">Open source licenses</string>
     <string name="settings_version_title">Version number</string>
-    <string name="settings_exclude_mask_strings_title">Exclude files mask</string>
+    <string name="settings_exclude_mask_strings_title">Exclude files</string>
     <string name="settings_exclude_mask_strings_summary">Use \";\" as separator and \"*\" for any symbols.</string>
 
     <!-- Share Intent -->

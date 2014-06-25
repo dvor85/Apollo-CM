@@ -91,12 +91,12 @@ public class RecentStore extends SQLiteOpenHelper {
      * @param albumIDdThe album's ID.
      * @param albumName The album name.
      * @param artistName The artist album name.
-     * @param songCount The number of tracks for the album.
+     * @param i The number of tracks for the album.
      * @param albumYear The year the album was released.
      */
     public void addAlbumId(final Long albumId, final String albumName, final String artistName,
-            final String songCount, final String albumYear) {
-        if (albumId == null || albumName == null || artistName == null || songCount == null) {
+            final int i, final String albumYear) {
+        if (albumId == null || albumName == null || artistName == null || i == 0) {
             return;
         }
 
@@ -108,7 +108,7 @@ public class RecentStore extends SQLiteOpenHelper {
         values.put(RecentStoreColumns.ID, albumId);
         values.put(RecentStoreColumns.ALBUMNAME, albumName);
         values.put(RecentStoreColumns.ARTISTNAME, artistName);
-        values.put(RecentStoreColumns.ALBUMSONGCOUNT, songCount);
+        values.put(RecentStoreColumns.ALBUMSONGCOUNT, i);
         values.put(RecentStoreColumns.ALBUMYEAR, albumYear);
         values.put(RecentStoreColumns.TIMEPLAYED, System.currentTimeMillis());
 
