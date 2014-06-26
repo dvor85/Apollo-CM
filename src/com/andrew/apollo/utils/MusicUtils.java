@@ -769,7 +769,7 @@ public final class MusicUtils {
 			if (cursor.moveToFirst()) {
 				do {
 					id = cursor.getInt(0);
-					if (getSongListForArtist(context, id).length > 0) {
+					if (getSongCountForArtist(context, id) > 0) {
 						break;
 					}
 				} while (cursor.moveToNext());
@@ -802,7 +802,7 @@ public final class MusicUtils {
 			if (cursor.moveToFirst()) {
 				do {
 					id = cursor.getInt(0);
-					if (getSongListForAlbum(context, id).length > 0) {
+					if (getSongCountForAlbum(context, id) > 0) {
 						break;
 					}
 				} while (cursor.moveToNext());
