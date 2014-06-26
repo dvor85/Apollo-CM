@@ -11,14 +11,13 @@
 
 package com.andrew.apollo;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.app.Application;
 import android.os.StrictMode;
 
 import com.andrew.apollo.cache.ImageCache;
-import com.andrew.apollo.utils.ApolloUtils;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Used to turn off logging for jaudiotagger and free up memory when
@@ -28,38 +27,38 @@ import java.util.logging.Logger;
  * @author Andrew Neal (andrewdneal@gmail.com)
  */
 public class ApolloApplication extends Application {
-    private static final boolean DEBUG = false;
+	private static final boolean DEBUG = false;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate() {
-        // Enable strict mode logging
-        enableStrictMode();
-        // Turn off logging for jaudiotagger.
-        Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onCreate() {
+		// Enable strict mode logging
+		enableStrictMode();
+		// Turn off logging for jaudiotagger.
+		Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onLowMemory() {
-        ImageCache.getInstance(this).evictAll();
-        super.onLowMemory();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onLowMemory() {
+		ImageCache.getInstance(this).evictAll();
+		super.onLowMemory();
+	}
 
-    private void enableStrictMode() {
-        if (DEBUG) {
-            final StrictMode.ThreadPolicy.Builder threadPolicyBuilder = new StrictMode.ThreadPolicy.Builder()
-                    .detectAll().penaltyLog();
-            final StrictMode.VmPolicy.Builder vmPolicyBuilder = new StrictMode.VmPolicy.Builder()
-                    .detectAll().penaltyLog();
+	private void enableStrictMode() {
+		if (DEBUG) {
+			final StrictMode.ThreadPolicy.Builder threadPolicyBuilder = new StrictMode.ThreadPolicy.Builder()
+					.detectAll().penaltyLog();
+			final StrictMode.VmPolicy.Builder vmPolicyBuilder = new StrictMode.VmPolicy.Builder()
+					.detectAll().penaltyLog();
 
-            threadPolicyBuilder.penaltyFlashScreen();
-            StrictMode.setThreadPolicy(threadPolicyBuilder.build());
-            StrictMode.setVmPolicy(vmPolicyBuilder.build());
-        }
-    }
+			threadPolicyBuilder.penaltyFlashScreen();
+			StrictMode.setThreadPolicy(threadPolicyBuilder.build());
+			StrictMode.setVmPolicy(vmPolicyBuilder.build());
+		}
+	}
 }

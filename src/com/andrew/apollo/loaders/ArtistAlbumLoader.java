@@ -11,20 +11,19 @@
 
 package com.andrew.apollo.loaders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AlbumColumns;
 
-import com.andrew.apollo.R;
 import com.andrew.apollo.model.Album;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.PreferenceUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to query {@link MediaStore.Audio.Artists.Albums} and return the albums

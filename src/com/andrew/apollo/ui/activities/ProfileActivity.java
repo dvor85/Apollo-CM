@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
@@ -509,7 +510,7 @@ public class ProfileActivity extends BaseActivity implements OnPageChangeListene
 		if (requestCode == NEW_PHOTO) {
 			if (resultCode == RESULT_OK) {
 				final Uri selectedImage = data.getData();
-				final String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				final String[] filePathColumn = { MediaColumns.DATA };
 
 				Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null,
 						null, null);

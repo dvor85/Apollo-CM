@@ -26,6 +26,6 @@ package com.andrew.apollo.lastfm;
  */
 public enum ImageSize {
 
-    SMALL, MEDIUM, LARGE, EXTRALARGE, MEGA, UNKNOWN
+	SMALL, MEDIUM, LARGE, EXTRALARGE, MEGA, UNKNOWN
 
 }

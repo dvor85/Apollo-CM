@@ -11,20 +11,19 @@
 
 package com.andrew.apollo.loaders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.ArtistColumns;
 
-import com.andrew.apollo.R;
 import com.andrew.apollo.model.Artist;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
 import com.andrew.apollo.utils.PreferenceUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to query {@link MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI} and
@@ -77,7 +76,7 @@ public class ArtistLoader extends WrappedAsyncTaskLoader<List<Artist>> {
 					final String artistName = mCursor.getString(1);
 
 					// Copy the number of albums
-					//final int albumCount = mCursor.getInt(2);
+					// final int albumCount = mCursor.getInt(2);
 					final int albumCount = MusicUtils.getAlbumCountForArtist(getContext(), id);
 
 					// Copy the number of songs

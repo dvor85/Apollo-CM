@@ -11,6 +11,10 @@
 
 package com.andrew.apollo.utils;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.WeakHashMap;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -49,12 +53,6 @@ import com.andrew.apollo.provider.FavoritesStore;
 import com.andrew.apollo.provider.FavoritesStore.FavoriteColumns;
 import com.andrew.apollo.provider.RecentStore;
 import com.devspark.appmsg.AppMsg;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.Locale;
-import java.util.WeakHashMap;
 
 /**
  * A collection of helpers directly related to music or Apollo's service.
@@ -519,11 +517,11 @@ public final class MusicUtils {
 		final String[] projection = new String[] { BaseColumns._ID };
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + MediaColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + id);
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
@@ -548,11 +546,11 @@ public final class MusicUtils {
 		final String[] projection = new String[] { BaseColumns._ID };
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + MediaColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + id);
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
@@ -597,7 +595,7 @@ public final class MusicUtils {
 		selection.append(" AND " + MediaColumns.TITLE + "!=''");
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		final Uri uri = MediaStore.Audio.Genres.Members.getContentUri("external", Long.valueOf(id));
 		Cursor cursor = context.getContentResolver().query(uri, projection, selection.toString(),
@@ -1012,11 +1010,11 @@ public final class MusicUtils {
 		}
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + MediaColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ALBUM_ID + "=" + id);
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		// group by section
 		selection.append(" ) GROUP BY ( " + AudioColumns.ALBUM_ID);
@@ -1050,11 +1048,11 @@ public final class MusicUtils {
 		}
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + MediaColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + id);
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		// group by section
 		selection.append(" ) GROUP BY ( " + AudioColumns.ARTIST_ID);
@@ -1087,11 +1085,11 @@ public final class MusicUtils {
 		}
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''");
+		selection.append(" AND " + MediaColumns.TITLE + " != ''");
 		selection.append(" AND " + AudioColumns.ARTIST_ID + "=" + id);
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		// group by section
 		selection.append(" ) GROUP BY ( " + AudioColumns.ALBUM_ID);
@@ -1200,10 +1198,10 @@ public final class MusicUtils {
 		final String[] projection = new String[] { MediaStore.Audio.Playlists.Members.AUDIO_ID };
 		final StringBuilder selection = new StringBuilder();
 		selection.append(AudioColumns.IS_MUSIC + "=1");
-		selection.append(" AND " + AudioColumns.TITLE + " != ''"); //$NON-NLS-2$
+		selection.append(" AND " + MediaColumns.TITLE + " != ''"); //$NON-NLS-2$
 		// Exclude files mask
 		for (String str : PreferenceUtils.getInstance(context).getExcludeFolders()) {
-			selection.append(" AND " + AudioColumns.DATA + " NOT LIKE " + "'" + str + "'");
+			selection.append(" AND " + MediaColumns.DATA + " NOT LIKE " + "'" + str + "'");
 		}
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Playlists.Members.getContentUri("external",

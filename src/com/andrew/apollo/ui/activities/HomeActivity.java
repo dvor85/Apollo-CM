@@ -26,24 +26,24 @@ import com.andrew.apollo.ui.fragments.phone.MusicBrowserPhoneFragment;
  */
 public class HomeActivity extends BaseActivity {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Load the music browser fragment
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Load the music browser fragment
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.activity_base_content, new MusicBrowserPhoneFragment()).commit();
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int setContentView() {
-        return R.layout.activity_base;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int setContentView() {
+		return R.layout.activity_base;
+	}
 }

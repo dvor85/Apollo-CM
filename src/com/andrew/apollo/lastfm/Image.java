@@ -21,8 +21,6 @@
 
 package com.andrew.apollo.lastfm;
 
-import java.util.Locale;
-
 /**
  * An <code>Image</code> contains metadata and URLs for an artist's image.
  * Metadata contains title, votes, format and other. Images are available in
@@ -34,24 +32,24 @@ import java.util.Locale;
  */
 public class Image extends ImageHolder {
 
-    final static ItemFactory<Image> FACTORY = new ImageFactory();
+	final static ItemFactory<Image> FACTORY = new ImageFactory();
 
-    private String url;
+	private String url;
 
-    private Image() {
-    }
+	private Image() {
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    private static class ImageFactory implements ItemFactory<Image> {
-        @Override
-        public Image createItemFromElement(final DomElement element) {
-            final Image i = new Image();
-            i.url = element.getChildText("url");
-            loadImages(i, element);
-            return i;
-        }
-    }
+	private static class ImageFactory implements ItemFactory<Image> {
+		@Override
+		public Image createItemFromElement(final DomElement element) {
+			final Image i = new Image();
+			i.url = element.getChildText("url");
+			loadImages(i, element);
+			return i;
+		}
+	}
 }

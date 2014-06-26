@@ -1,7 +1,8 @@
-
 package com.andrew.apollo.loaders;
 
 import static com.andrew.apollo.utils.MusicUtils.mService;
+
+import java.util.Arrays;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,10 +13,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.MusicUtils;
-
-import java.util.Arrays;
 
 /**
  * A custom {@link Cursor} used to return the queue and allow for easy dragging
@@ -24,266 +22,267 @@ import java.util.Arrays;
 @SuppressLint("NewApi")
 public class NowPlayingCursor extends AbstractCursor {
 
-    private static final String[] PROJECTION = new String[] {
-            /* 0 */
-            BaseColumns._ID,
-            /* 1 */
-            AudioColumns.TITLE,
-            /* 2 */
-            AudioColumns.ARTIST,
-            /* 3 */
-            AudioColumns.ALBUM
-    };
+	private static final String[] PROJECTION = new String[] {
+	/* 0 */
+	BaseColumns._ID,
+	/* 1 */
+	AudioColumns.TITLE,
+	/* 2 */
+	AudioColumns.ARTIST,
+	/* 3 */
+	AudioColumns.ALBUM };
 
-    private final Context mContext;
+	private final Context mContext;
 
-    private long[] mNowPlaying;
+	private long[] mNowPlaying;
 
-    private long[] mCursorIndexes;
+	private long[] mCursorIndexes;
 
-    private int mSize;
+	private int mSize;
 
-    private int mCurPos;
+	private int mCurPos;
 
-    private Cursor mQueueCursor;
+	private Cursor mQueueCursor;
 
-    /**
-     * Constructor of <code>NowPlayingCursor</code>
-     * 
-     * @param context The {@link Context} to use
-     */
-    public NowPlayingCursor(final Context context) {
-        mContext = context;
-        makeNowPlayingCursor();
-    }
+	/**
+	 * Constructor of <code>NowPlayingCursor</code>
+	 * 
+	 * @param context
+	 *            The {@link Context} to use
+	 */
+	public NowPlayingCursor(final Context context) {
+		mContext = context;
+		makeNowPlayingCursor();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getCount() {
-        return mSize;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getCount() {
+		return mSize;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean onMove(final int oldPosition, final int newPosition) {
-        if (oldPosition == newPosition) {
-            return true;
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean onMove(final int oldPosition, final int newPosition) {
+		if (oldPosition == newPosition) {
+			return true;
+		}
 
-        if (mNowPlaying == null || mCursorIndexes == null || newPosition >= mNowPlaying.length) {
-            return false;
-        }
+		if (mNowPlaying == null || mCursorIndexes == null || newPosition >= mNowPlaying.length) {
+			return false;
+		}
 
-        final long id = mNowPlaying[newPosition];
-        final int cursorIndex = Arrays.binarySearch(mCursorIndexes, id);
-        mQueueCursor.moveToPosition(cursorIndex);
-        mCurPos = newPosition;
-        return true;
-    }
+		final long id = mNowPlaying[newPosition];
+		final int cursorIndex = Arrays.binarySearch(mCursorIndexes, id);
+		mQueueCursor.moveToPosition(cursorIndex);
+		mCurPos = newPosition;
+		return true;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getString(final int column) {
-        try {
-            return mQueueCursor.getString(column);
-        } catch (final Exception ignored) {
-            onChange(true);
-            return "";
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getString(final int column) {
+		try {
+			return mQueueCursor.getString(column);
+		} catch (final Exception ignored) {
+			onChange(true);
+			return "";
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public short getShort(final int column) {
-        return mQueueCursor.getShort(column);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public short getShort(final int column) {
+		return mQueueCursor.getShort(column);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getInt(final int column) {
-        try {
-            return mQueueCursor.getInt(column);
-        } catch (final Exception ignored) {
-            onChange(true);
-            return 0;
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getInt(final int column) {
+		try {
+			return mQueueCursor.getInt(column);
+		} catch (final Exception ignored) {
+			onChange(true);
+			return 0;
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long getLong(final int column) {
-        try {
-            return mQueueCursor.getLong(column);
-        } catch (final Exception ignored) {
-            onChange(true);
-            return 0;
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public long getLong(final int column) {
+		try {
+			return mQueueCursor.getLong(column);
+		} catch (final Exception ignored) {
+			onChange(true);
+			return 0;
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public float getFloat(final int column) {
-        return mQueueCursor.getFloat(column);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public float getFloat(final int column) {
+		return mQueueCursor.getFloat(column);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double getDouble(final int column) {
-        return mQueueCursor.getDouble(column);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public double getDouble(final int column) {
+		return mQueueCursor.getDouble(column);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getType(final int column) {
-        return mQueueCursor.getType(column);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getType(final int column) {
+		return mQueueCursor.getType(column);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isNull(final int column) {
-        return mQueueCursor.isNull(column);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isNull(final int column) {
+		return mQueueCursor.isNull(column);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String[] getColumnNames() {
-        return PROJECTION;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String[] getColumnNames() {
+		return PROJECTION;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("deprecation")
-    @Override
-    public void deactivate() {
-        if (mQueueCursor != null) {
-            mQueueCursor.deactivate();
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("deprecation")
+	@Override
+	public void deactivate() {
+		if (mQueueCursor != null) {
+			mQueueCursor.deactivate();
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean requery() {
-        makeNowPlayingCursor();
-        return true;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean requery() {
+		makeNowPlayingCursor();
+		return true;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() {
-        try {
-            if (mQueueCursor != null) {
-                mQueueCursor.close();
-                mQueueCursor = null;
-            }
-        } catch (final Exception close) {
-        }
-        super.close();
-    };
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void close() {
+		try {
+			if (mQueueCursor != null) {
+				mQueueCursor.close();
+				mQueueCursor = null;
+			}
+		} catch (final Exception close) {
+		}
+		super.close();
+	};
 
-    /**
-     * Actually makes the queue
-     */
-    private void makeNowPlayingCursor() {
-        mQueueCursor = null;
-        mNowPlaying = MusicUtils.getQueue();
-        mSize = mNowPlaying.length;
-        if (mSize == 0) {
-            return;
-        }
+	/**
+	 * Actually makes the queue
+	 */
+	private void makeNowPlayingCursor() {
+		mQueueCursor = null;
+		mNowPlaying = MusicUtils.getQueue();
+		mSize = mNowPlaying.length;
+		if (mSize == 0) {
+			return;
+		}
 
-        final StringBuilder selection = new StringBuilder();
-        selection.append(MediaStore.Audio.Media._ID + " IN (");
-        for (int i = 0; i < mSize; i++) {
-            selection.append(mNowPlaying[i]);
-            if (i < mSize - 1) {
-                selection.append(",");
-            }
-        }
-        selection.append(")");
+		final StringBuilder selection = new StringBuilder();
+		selection.append(BaseColumns._ID + " IN (");
+		for (int i = 0; i < mSize; i++) {
+			selection.append(mNowPlaying[i]);
+			if (i < mSize - 1) {
+				selection.append(",");
+			}
+		}
+		selection.append(")");
 
-        mQueueCursor = mContext.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, PROJECTION, selection.toString(),
-                null, MediaStore.Audio.Media._ID);
+		mQueueCursor = mContext.getContentResolver().query(
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, PROJECTION, selection.toString(),
+				null, BaseColumns._ID);
 
-        if (mQueueCursor == null) {
-            mSize = 0;
-            return;
-        }
+		if (mQueueCursor == null) {
+			mSize = 0;
+			return;
+		}
 
-        final int playlistSize = mQueueCursor.getCount();
-        mCursorIndexes = new long[playlistSize];
-        mQueueCursor.moveToFirst();
-        final int columnIndex = mQueueCursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
-        for (int i = 0; i < playlistSize; i++) {
-            mCursorIndexes[i] = mQueueCursor.getLong(columnIndex);
-            mQueueCursor.moveToNext();
-        }
-        mQueueCursor.moveToFirst();
-        mCurPos = -1;
+		final int playlistSize = mQueueCursor.getCount();
+		mCursorIndexes = new long[playlistSize];
+		mQueueCursor.moveToFirst();
+		final int columnIndex = mQueueCursor.getColumnIndexOrThrow(BaseColumns._ID);
+		for (int i = 0; i < playlistSize; i++) {
+			mCursorIndexes[i] = mQueueCursor.getLong(columnIndex);
+			mQueueCursor.moveToNext();
+		}
+		mQueueCursor.moveToFirst();
+		mCurPos = -1;
 
-        int removed = 0;
-        for (int i = mNowPlaying.length - 1; i >= 0; i--) {
-            final long trackId = mNowPlaying[i];
-            final int cursorIndex = Arrays.binarySearch(mCursorIndexes, trackId);
-            if (cursorIndex < 0) {
-                removed += MusicUtils.removeTrack(trackId);
-            }
-        }
-        if (removed > 0) {
-            mNowPlaying = MusicUtils.getQueue();
-            mSize = mNowPlaying.length;
-            if (mSize == 0) {
-                mCursorIndexes = null;
-                return;
-            }
-        }
-    }
+		int removed = 0;
+		for (int i = mNowPlaying.length - 1; i >= 0; i--) {
+			final long trackId = mNowPlaying[i];
+			final int cursorIndex = Arrays.binarySearch(mCursorIndexes, trackId);
+			if (cursorIndex < 0) {
+				removed += MusicUtils.removeTrack(trackId);
+			}
+		}
+		if (removed > 0) {
+			mNowPlaying = MusicUtils.getQueue();
+			mSize = mNowPlaying.length;
+			if (mSize == 0) {
+				mCursorIndexes = null;
+				return;
+			}
+		}
+	}
 
-    /**
-     * @param which The position to remove
-     * @return True if sucessfull, false othersise
-     */
-    public boolean removeItem(final int which) {
-        try {
-            if (mService.removeTracks(which, which) == 0) {
-                return false;
-            }
-            int i = which;
-            mSize--;
-            while (i < mSize) {
-                mNowPlaying[i] = mNowPlaying[i + 1];
-                i++;
-            }
-            onMove(-1, mCurPos);
-        } catch (final RemoteException ignored) {
-        }
-        return true;
-    }
+	/**
+	 * @param which
+	 *            The position to remove
+	 * @return True if sucessfull, false othersise
+	 */
+	public boolean removeItem(final int which) {
+		try {
+			if (mService.removeTracks(which, which) == 0) {
+				return false;
+			}
+			int i = which;
+			mSize--;
+			while (i < mSize) {
+				mNowPlaying[i] = mNowPlaying[i + 1];
+				i++;
+			}
+			onMove(-1, mCurPos);
+		} catch (final RemoteException ignored) {
+		}
+		return true;
+	}
 }

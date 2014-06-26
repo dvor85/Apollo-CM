@@ -11,6 +11,9 @@
 
 package com.andrew.apollo.loaders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -22,9 +25,6 @@ import com.andrew.apollo.R;
 import com.andrew.apollo.model.Playlist;
 import com.andrew.apollo.utils.Lists;
 import com.andrew.apollo.utils.MusicUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to query {@link MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI} and

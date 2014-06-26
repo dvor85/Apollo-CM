@@ -11,16 +11,15 @@
 
 package com.andrew.apollo.widgets.theme;
 
+import java.lang.ref.WeakReference;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.andrew.apollo.utils.ApolloUtils;
 import com.andrew.apollo.utils.ThemeUtils;
-
-import java.lang.ref.WeakReference;
 
 /**
  * A themeable {@link StateListDrawable}.
@@ -29,48 +28,46 @@ import java.lang.ref.WeakReference;
  */
 public class HoloSelector extends StateListDrawable {
 
-    /**
-     * Used to theme the touched and focused colors
-     */
-    private static final String RESOURCE_NAME = "holo_selector";
+	/**
+	 * Used to theme the touched and focused colors
+	 */
+	private static final String RESOURCE_NAME = "holo_selector";
 
-    /**
-     * Focused state
-     */
-    private static final int FOCUSED = android.R.attr.state_focused;
+	/**
+	 * Focused state
+	 */
+	private static final int FOCUSED = android.R.attr.state_focused;
 
-    /**
-     * Pressed state
-     */
-    private static final int PRESSED = android.R.attr.state_pressed;
+	/**
+	 * Pressed state
+	 */
+	private static final int PRESSED = android.R.attr.state_pressed;
 
-    /**
-     * Constructor for <code>HoloSelector</code>
-     * 
-     * @param context The {@link Context} to use.
-     */
-    @SuppressLint("NewApi")
-    public HoloSelector(final Context context) {
-        final ThemeUtils resources = new ThemeUtils(context);
-        final int themeColor = resources.getColor(RESOURCE_NAME);
-        // Focused
-        addState(new int[] {
-            FOCUSED
-        }, makeColorDrawable(themeColor));
-        // Pressed
-        addState(new int[] {
-            PRESSED
-        }, makeColorDrawable(themeColor));
-        // Default
-        addState(new int[] {}, makeColorDrawable(Color.TRANSPARENT));
-        setExitFadeDuration(400);
-    }
+	/**
+	 * Constructor for <code>HoloSelector</code>
+	 * 
+	 * @param context
+	 *            The {@link Context} to use.
+	 */
+	@SuppressLint("NewApi")
+	public HoloSelector(final Context context) {
+		final ThemeUtils resources = new ThemeUtils(context);
+		final int themeColor = resources.getColor(RESOURCE_NAME);
+		// Focused
+		addState(new int[] { FOCUSED }, makeColorDrawable(themeColor));
+		// Pressed
+		addState(new int[] { PRESSED }, makeColorDrawable(themeColor));
+		// Default
+		addState(new int[] {}, makeColorDrawable(Color.TRANSPARENT));
+		setExitFadeDuration(400);
+	}
 
-    /**
-     * @param color The color to use.
-     * @return A new {@link ColorDrawable}.
-     */
-    private static final ColorDrawable makeColorDrawable(final int color) {
-        return new WeakReference<ColorDrawable>(new ColorDrawable(color)).get();
-    }
+	/**
+	 * @param color
+	 *            The color to use.
+	 * @return A new {@link ColorDrawable}.
+	 */
+	private static final ColorDrawable makeColorDrawable(final int color) {
+		return new WeakReference<ColorDrawable>(new ColorDrawable(color)).get();
+	}
 }
